@@ -38,6 +38,7 @@ class ClientHandler implements Runnable{
         while(true){
             try{
                 recievedData = dataInputStream.readUTF();
+                System.out.print("recievedData"+recievedData);
             }
             catch (IOException e) {
 
