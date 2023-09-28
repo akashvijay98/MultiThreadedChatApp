@@ -4,11 +4,12 @@ import java.net.*;
 
 public class Server {
     static int count = 0;
-
+    static  Vector<ClientHandler> clientsList = new Vector<>();
     public static void main(String[] args) throws IOException {
 
-        ServerSocket serverSocket = new ServerSocket(1234);
         Socket socket;
+
+        ServerSocket serverSocket = new ServerSocket(1234);
 
         while(true){
             socket = serverSocket.accept();
@@ -18,7 +19,16 @@ public class Server {
             DataInputStream dis = new DataInputStream(socket.getInputStream());
             DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
 
+            ClientHandler obj = new ClientHandler(dis, dos);
 
+            Thread t = new Thread(obj);
+
+
+            clientsList.add(obj);
+
+            t.start();
+
+            count++;
         }
 
     }
@@ -28,8 +38,11 @@ public class Server {
 
 class ClientHandler implements Runnable{
     DataInputStream dataInputStream;
-    public ClientHandler(DataInputStream _dataInputStream){
+    DataOutputStream dataOutputStream;
+    public ClientHandler(DataInputStream _dataInputStream, DataOutputStream _dataOutputStream){
         dataInputStream = _dataInputStream;
+        dataOutputStream = _dataOutputStream;
+
     }
 
     @Override
@@ -39,6 +52,11 @@ class ClientHandler implements Runnable{
             try{
                 recievedData = dataInputStream.readUTF();
                 System.out.print("recievedData"+recievedData);
+
+                for(ClientHandler clientItem : Server.clientsList){
+                    clientItem.dataOutputStream.writeUTF("hey"+ Server.count);
+
+                }
             }
             catch (IOException e) {
 
