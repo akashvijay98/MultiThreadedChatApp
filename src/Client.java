@@ -11,8 +11,9 @@ public class Client {
     final static int ServerPort = 1234;
 
     public static void main(String[] args) throws IOException, UnknownHostException {
-        Scanner sc = new Scanner(System.in);
         InetAddress ip = InetAddress.getByName("localhost");
+        Scanner sc = new Scanner(System.in);
+
 
         Socket s = new Socket(ip, ServerPort);
 
@@ -23,11 +24,11 @@ public class Client {
             @Override
             public void run() {
                 while(true){
+
                     String msg = sc.nextLine();
 
                     try{
                         dos.writeUTF(msg);
-                        System.out.println(dis.readUTF());
                     }
                     catch (IOException e){
                         e.printStackTrace();
